@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static & Default Routing | Sanjay Kumar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-card: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .project-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .nav-title { font-size: 14px; color: var(--text-muted); }
+
+        .project-hero {
+            padding: 140px 40px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-label {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .project-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .meta-item { display: flex; align-items: center; gap: 8px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .tag {
+            padding: 6px 14px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+        }
+
+        .section {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .content-card p:last-child { margin-bottom: 0; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .objective-list { list-style: none; }
+
+        .objective-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .objective-list li:last-child { border-bottom: none; }
+        .objective-list .check { color: var(--accent-green); font-size: 16px; flex-shrink: 0; }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); }
+        .tool-icon { font-size: 40px; margin-bottom: 12px; }
+        .tool-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .tool-card p { font-size: 13px; color: var(--text-muted); }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .step-card p { font-size: 14px; color: var(--text-secondary); }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .code-content { padding: 16px; overflow-x: auto; }
+
+        .code-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #a5b4fc;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .screenshot-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .screenshot-placeholder .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .screenshot-placeholder p { font-size: 14px; }
+        .screenshot-placeholder .filename { font-size: 12px; color: var(--text-muted); margin-top: 8px; font-family: monospace; }
+
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .learning-card:hover { border-color: var(--accent-blue); }
+        .learning-icon { font-size: 28px; margin-bottom: 12px; }
+        .learning-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+        .learning-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .problem-card, .solution-card { padding: 32px; border-radius: 16px; text-align: center; }
+        .problem-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .solution-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .ps-icon { font-size: 32px; margin-bottom: 16px; }
+        .problem-card h3, .solution-card h3 { font-size: 18px; margin-bottom: 12px; }
+        .problem-card p, .solution-card p { font-size: 14px; color: var(--text-secondary); }
+        .arrow { font-size: 32px; color: var(--accent-blue); }
+
+        /* Topology Diagram */
+        .topology-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .topology-ascii {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--accent-cyan);
+            line-height: 1.4;
+            white-space: pre;
+            margin-bottom: 24px;
+        }
+
+        .topology-legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .nav-btn:hover { border-color: var(--accent-blue); }
+        .nav-btn .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .nav-btn .title { font-size: 15px; color: var(--accent-blue); font-weight: 500; }
+        .nav-btn.next { text-align: right; }
+
+        @media (max-width: 768px) {
+            .project-nav { padding: 12px 20px; }
+            .project-hero { padding: 120px 20px 60px; }
+            .section { padding: 40px 20px; }
+            .problem-solution { grid-template-columns: 1fr; }
+            .arrow { transform: rotate(90deg); }
+            .topology-ascii { font-size: 10px; }
+            .project-footer { flex-direction: column; gap: 16px; }
+            .nav-btn { width: 100%; }
+        }
+    </style>
+</head>
+
+<script>
+    function goBackToPortfolio(e) {
+        if (e) e.preventDefault();
+
+        // If opened inside modal / iframe
+        if (window.parent && window.parent !== window) {
+            if (typeof window.parent.closeProjectModal === "function") {
+                window.parent.closeProjectModal();
+                return;
+            }
+        }
+
+        // Fallback: normal navigation
+        window.location.href = "../index.html#projects";
+    }
+
+    // ESC key support
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            goBackToPortfolio(e);
+        }
+    });
+</script>
+
+<body>
+    <nav class="project-nav">
+        <a href="../index.html#projects"
+   class="back-btn"
+   onclick="goBackToPortfolio(event)">
+   ← Back to Portfolio
+</a>
+
+        <span class="nav-title">Project 03 of 05</span>
+    </nav>
+
+    <header class="project-hero">
+        <span class="project-label">PROJECT 03 • ROUTING</span>
+        <h1>Static & Default Routing in Enterprise Networks</h1>
+        <div class="project-meta">
+            <span class="meta-item">📅 Completed: March 2024</span>
+            <span class="meta-item">⏱️ Duration: 3 weeks</span>
+            <span class="meta-item">🏷️ Category: Routing</span>
+        </div>
+        <div class="project-tags">
+            <span class="tag">Static Routing</span>
+            <span class="tag">Default Route</span>
+            <span class="tag">Cisco IOS</span>
+            <span class="tag">GNS3</span>
+            <span class="tag">IP Routing</span>
+        </div>
+    </header>
+
+    <section class="section">
+        <h2 class="section-title">Project Overview</h2>
+        <div class="content-card">
+            <p>This project focused on manually configuring routes on routers to connect multiple networks and ensure packets reach their destinations. I connected 3 routers in GNS3, each with its own network segment, and configured static routes so all networks could communicate.</p>
+            <p>Without routing configured, Network A couldn't talk to Network C because routers didn't know where to send packets. I learned to add static routes that tell each router exactly where to forward traffic for specific destination networks, and default routes for traffic going to unknown destinations.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Network Topology</h2>
+        <div class="topology-diagram">
+            <div class="topology-ascii">
+    ┌─────────┐         ┌─────────┐         ┌─────────┐
+    │   R1    │─────────│   R2    │─────────│   R3    │
+    └────┬────┘  10.0.0.0/30  └────┬────┘  10.0.1.0/30  └────┬────┘
+         │                        │                        │
+    ┌────┴────┐              ┌────┴────┐              ┌────┴────┐
+    │ Network │              │ Network │              │ Network │
+    │    A    │              │    B    │              │    C    │
+    │192.168.1│              │192.168.2│              │192.168.3│
+    │  .0/24  │              │  .0/24  │              │  .0/24  │
+    └─────────┘              └─────────┘              └─────────┘
+         │                        │                        │
+       [PC1]                    [PC2]                    [PC3]
+            </div>
+            <div class="topology-legend">
+                <div class="legend-item"><div class="legend-color" style="background: var(--accent-blue);"></div> Router</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--accent-cyan);"></div> LAN Network</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--accent-green);"></div> End Device</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Problem Solved</h2>
+        <div class="problem-solution">
+            <div class="problem-card">
+                <div class="ps-icon">⚠️</div>
+                <h3>The Problem</h3>
+                <p>PC1 in Network A (192.168.1.0) couldn't ping PC3 in Network C (192.168.3.0). Router R1 had no idea how to reach Network C - the packets were being dropped.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="solution-card">
+                <div class="ps-icon">✓</div>
+                <h3>The Solution</h3>
+                <p>Added static routes on each router pointing to remote networks via the next-hop router. Now all three networks can communicate with each other.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Objectives</h2>
+        <div class="content-card">
+            <ul class="objective-list">
+                <li><span class="check">✓</span> Build a multi-router topology connecting three separate networks</li>
+                <li><span class="check">✓</span> Configure IP addresses on all router interfaces</li>
+                <li><span class="check">✓</span> Add static routes for each remote network destination</li>
+                <li><span class="check">✓</span> Configure default routes for edge routers</li>
+                <li><span class="check">✓</span> Verify end-to-end connectivity with ping and traceroute</li>
+                <li><span class="check">✓</span> Understand routing table structure and route selection</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Tools & Technologies</h2>
+        <div class="grid-4">
+            <div class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <h3>Cisco IOS</h3>
+                <p>Router configuration</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">🖥️</div>
+                <h3>GNS3</h3>
+                <p>Network simulation</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">💻</div>
+                <h3>CLI</h3>
+                <p>Ping, Traceroute</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>Routing Tables</h3>
+                <p>Path analysis</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">What I Did</h2>
+        <div class="grid-2">
+            <div class="step-card">
+                <span class="step-number">1</span>
+                <h3>Built the Topology</h3>
+                <p>Created 3 routers connected in a line, with each router having one LAN network and a PC attached.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">2</span>
+                <h3>Assigned IP Addresses</h3>
+                <p>Configured IP addresses on all interfaces. Router-to-router links used 10.0.x.0/30 subnets, LANs used 192.168.x.0/24.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">3</span>
+                <h3>Added Static Routes</h3>
+                <p>On R1, added routes for 192.168.2.0/24 and 192.168.3.0/24 via R2. Repeated for all routers in both directions.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">4</span>
+                <h3>Configured Default Route</h3>
+                <p>Added 0.0.0.0/0 default route on edge routers for traffic going to unknown destinations (simulated internet).</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">5</span>
+                <h3>Tested Connectivity</h3>
+                <p>Pinged from PC1 to PC3 and verified success. Used traceroute to confirm packets took the correct path.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">6</span>
+                <h3>Verified Routing Tables</h3>
+                <p>Used "show ip route" to examine the routing table and confirm all routes were properly installed.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Configuration Commands</h2>
+        <div class="grid-2">
+            <div class="code-block">
+                <div class="code-header">Static Route Syntax</div>
+                <div class="code-content">
+                    <pre>! Syntax: ip route [dest] [mask] [next-hop]
+
+! R1 Configuration
+R1(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.2
+R1(config)# ip route 192.168.3.0 255.255.255.0 10.0.0.2
+
+! R3 Configuration  
+R3(config)# ip route 192.168.1.0 255.255.255.0 10.0.1.1
+R3(config)# ip route 192.168.2.0 255.255.255.0 10.0.1.1</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Default Route</div>
+                <div class="code-content">
+                    <pre>! Send all unknown traffic to next-hop
+R1(config)# ip route 0.0.0.0 0.0.0.0 10.0.0.2
+
+! This catches all traffic not matching
+! specific routes in the routing table</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Interface Configuration</div>
+                <div class="code-content">
+                    <pre>R1(config)# interface g0/0
+R1(config-if)# ip address 192.168.1.1 255.255.255.0
+R1(config-if)# no shutdown
+
+R1(config)# interface g0/1
+R1(config-if)# ip address 10.0.0.1 255.255.255.252
+R1(config-if)# no shutdown</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Verification Commands</div>
+                <div class="code-content">
+                    <pre>R1# show ip route
+R1# show ip route static
+R1# ping 192.168.3.10
+R1# traceroute 192.168.3.10</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Screenshots</h2>
+        <div class="grid-2">
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>GNS3 network topology</p>
+                <span class="filename">static-routing-topology.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Routing table output</p>
+                <span class="filename">routing-table.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Successful ping test</p>
+                <span class="filename">ping-test.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Traceroute output</p>
+                <span class="filename">traceroute-output.png</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Key Learnings</h2>
+        <div class="grid-4">
+            <div class="learning-card">
+                <div class="learning-icon">🗺️</div>
+                <h3>Routing Tables</h3>
+                <p>Routers use tables to decide where to send packets. No matching entry means packet gets dropped.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">↔️</div>
+                <h3>Two-Way Routes</h3>
+                <p>Ping needs a reply, so routes must exist in both directions or communication fails.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🎯</div>
+                <h3>Next-Hop Logic</h3>
+                <p>Router doesn't know the full path. It just knows "send to this neighbor" and trusts the next router.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">⚙️</div>
+                <h3>Static vs Dynamic</h3>
+                <p>Static routes don't adapt to changes. Good for small networks, impractical for large ones.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Results & Outcomes</h2>
+        <div class="content-card">
+            <p>✅ Successfully connected three separate networks using static routing</p>
+            <p>✅ Achieved full end-to-end connectivity between all PCs across the topology</p>
+            <p>✅ Understood how routers make forwarding decisions based on routing tables</p>
+            <p>✅ Learned the importance of bidirectional routes for two-way communication</p>
+        </div>
+    </section>
+
+    <footer class="project-footer">
+        <a href="dhcp-implementation.html" class="nav-btn">
+            <span class="label">Previous Project</span>
+            <span class="title">← DHCP Implementation</span>
+        </a>
+        <a href="ospf-routing.html" class="nav-btn next">
+            <span class="label">Next Project</span>
+            <span class="title">OSPF Routing →</span>
+        </a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSPF Dynamic Routing | Sanjay Kumar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-card: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f97316;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .project-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .nav-title { font-size: 14px; color: var(--text-muted); }
+
+        .project-hero {
+            padding: 140px 40px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-label {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(249, 115, 22, 0.15);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+        }
+
+        .project-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .meta-item { display: flex; align-items: center; gap: 8px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .tag {
+            padding: 6px 14px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+        }
+
+        .section {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .content-card p:last-child { margin-bottom: 0; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .objective-list { list-style: none; }
+
+        .objective-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .objective-list li:last-child { border-bottom: none; }
+        .objective-list .check { color: var(--accent-green); font-size: 16px; flex-shrink: 0; }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); }
+        .tool-icon { font-size: 40px; margin-bottom: 12px; }
+        .tool-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .tool-card p { font-size: 13px; color: var(--text-muted); }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .step-card p { font-size: 14px; color: var(--text-secondary); }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .code-content { padding: 16px; overflow-x: auto; }
+
+        .code-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #a5b4fc;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .screenshot-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .screenshot-placeholder .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .screenshot-placeholder p { font-size: 14px; }
+        .screenshot-placeholder .filename { font-size: 12px; color: var(--text-muted); margin-top: 8px; font-family: monospace; }
+
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .learning-card:hover { border-color: var(--accent-blue); }
+        .learning-icon { font-size: 28px; margin-bottom: 12px; }
+        .learning-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+        .learning-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .problem-card, .solution-card { padding: 32px; border-radius: 16px; text-align: center; }
+        .problem-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .solution-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .ps-icon { font-size: 32px; margin-bottom: 16px; }
+        .problem-card h3, .solution-card h3 { font-size: 18px; margin-bottom: 12px; }
+        .problem-card p, .solution-card p { font-size: 14px; color: var(--text-secondary); }
+        .arrow { font-size: 32px; color: var(--accent-blue); }
+
+        /* OSPF States */
+        .ospf-states {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .state-item {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 12px;
+            text-align: center;
+            position: relative;
+        }
+
+        .state-item::after {
+            content: '→';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-blue);
+            font-size: 16px;
+        }
+
+        .state-item:last-child::after { display: none; }
+
+        .state-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 4px;
+        }
+
+        .state-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .highlight-box h4 {
+            color: var(--accent-blue);
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .nav-btn:hover { border-color: var(--accent-blue); }
+        .nav-btn .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .nav-btn .title { font-size: 15px; color: var(--accent-blue); font-weight: 500; }
+        .nav-btn.next { text-align: right; }
+
+        @media (max-width: 768px) {
+            .project-nav { padding: 12px 20px; }
+            .project-hero { padding: 120px 20px 60px; }
+            .section { padding: 40px 20px; }
+            .problem-solution { grid-template-columns: 1fr; }
+            .arrow { transform: rotate(90deg); }
+            .ospf-states { flex-direction: column; }
+            .state-item::after { display: none; }
+            .project-footer { flex-direction: column; gap: 16px; }
+            .nav-btn { width: 100%; }
+        }
+    </style>
+</head>
+
+<script>
+  function goBackToPortfolio() {
+    if (window.parent && window.parent.closeProjectModal) {
+      window.parent.closeProjectModal();
+    }
+  }
+</script>
+
+
+<body>
+    <nav class="project-nav">
+        <a href="javascript:void(0)" onclick="goBackToPortfolio()">
+  ← Back to Portfolio
+</a>
+
+
+        <span class="nav-title">Project 04 of 05</span>
+    </nav>
+
+    <header class="project-hero">
+        <span class="project-label">PROJECT 04 • REAL-TIME PROJECT</span>
+        <h1>OSPF Dynamic Routing</h1>
+        <div class="project-meta">
+            <span class="meta-item">📅 Completed: April 2024</span>
+            <span class="meta-item">⏱️ Duration: 4 weeks</span>
+            <span class="meta-item">🏷️ Category: Dynamic Routing</span>
+        </div>
+        <div class="project-tags">
+            <span class="tag">OSPF</span>
+            <span class="tag">Dynamic Routing</span>
+            <span class="tag">Link State</span>
+            <span class="tag">GNS3</span>
+            <span class="tag">Multi-Area</span>
+        </div>
+    </header>
+
+    <section class="section">
+        <h2 class="section-title">Project Overview</h2>
+        <div class="content-card">
+            <p>This project involved configuring OSPF (Open Shortest Path First) across a network of 4 routers. Unlike static routing where I manually added each route, OSPF routers automatically discover each other, share network information, and calculate the best paths to all destinations.</p>
+            <p>The most impressive part was testing failover - when I disconnected one link, OSPF detected the failure through missed hello packets and automatically recalculated routes to use an alternate path. The network recovered in about 30 seconds without any manual intervention.</p>
+            <div class="highlight-box">
+                <h4>🎯 Real-Time Application</h4>
+                <p>This project simulates how enterprise networks use dynamic routing protocols to maintain connectivity even when individual links or devices fail. It's the foundation for building resilient, self-healing networks.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">OSPF Neighbor States</h2>
+        <div class="content-card">
+            <p>OSPF routers go through several states before they can exchange routes and form a full neighbor relationship:</p>
+            <div class="ospf-states">
+                <div class="state-item">
+                    <div class="state-name">DOWN</div>
+                    <div class="state-desc">No hellos received</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">INIT</div>
+                    <div class="state-desc">Hello received</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">2-WAY</div>
+                    <div class="state-desc">Bidirectional</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">EXSTART</div>
+                    <div class="state-desc">Master/Slave</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">EXCHANGE</div>
+                    <div class="state-desc">DBD exchange</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">LOADING</div>
+                    <div class="state-desc">LSA request</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-name">FULL</div>
+                    <div class="state-desc">Synchronized</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Problem Solved</h2>
+        <div class="problem-solution">
+            <div class="problem-card">
+                <div class="ps-icon">⚠️</div>
+                <h3>The Problem</h3>
+                <p>With static routes, if one link fails the network breaks until someone manually updates the routing tables. Not practical for 24/7 enterprise operations.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="solution-card">
+                <div class="ps-icon">✓</div>
+                <h3>The Solution</h3>
+                <p>OSPF detects link failures through hello packets. When a neighbor stops responding, it automatically recalculates routes and finds a new path - no manual intervention needed.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Objectives</h2>
+        <div class="content-card">
+            <ul class="objective-list">
+                <li><span class="check">✓</span> Configure OSPF on multiple routers in a single area (Area 0)</li>
+                <li><span class="check">✓</span> Establish and verify OSPF neighbor relationships</li>
+                <li><span class="check">✓</span> Analyze OSPF cost metrics and path selection</li>
+                <li><span class="check">✓</span> Test network convergence during link failures</li>
+                <li><span class="check">✓</span> Understand the OSPF Link State Database (LSDB)</li>
+                <li><span class="check">✓</span> Configure OSPF router ID and priority settings</li>
+                <li><span class="check">✓</span> Implement multi-area OSPF design concepts</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Tools & Technologies</h2>
+        <div class="grid-4">
+            <div class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <h3>Cisco IOS</h3>
+                <p>OSPF configuration</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">🖥️</div>
+                <h3>GNS3</h3>
+                <p>Network simulation</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">🦈</div>
+                <h3>Wireshark</h3>
+                <p>OSPF packet analysis</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>OSPF Commands</h3>
+                <p>Verification & debug</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">What I Did</h2>
+        <div class="grid-2">
+            <div class="step-card">
+                <span class="step-number">1</span>
+                <h3>Built Redundant Topology</h3>
+                <p>Created 4 routers with multiple paths between them. Added redundant links so if one fails, an alternate path exists.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">2</span>
+                <h3>Enabled OSPF Process</h3>
+                <p>Configured OSPF process ID 1 on each router and advertised connected networks into Area 0.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">3</span>
+                <h3>Verified Neighbor Relationships</h3>
+                <p>Used "show ip ospf neighbor" to confirm all routers reached FULL state with their neighbors.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">4</span>
+                <h3>Examined LSDB</h3>
+                <p>Analyzed the Link State Database to understand how OSPF builds its network map.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">5</span>
+                <h3>Tested Path Selection</h3>
+                <p>Verified OSPF chose the lowest-cost path and understood how interface bandwidth affects cost.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">6</span>
+                <h3>Simulated Link Failure</h3>
+                <p>Shut down one link and watched OSPF recalculate routes. Traffic automatically shifted to the backup path.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Configuration Commands</h2>
+        <div class="grid-2">
+            <div class="code-block">
+                <div class="code-header">Enable OSPF</div>
+                <div class="code-content">
+                    <pre>Router(config)# router ospf 1
+Router(config-router)# router-id 1.1.1.1
+Router(config-router)# network 192.168.1.0 0.0.0.255 area 0
+Router(config-router)# network 10.0.0.0 0.0.0.255 area 0
+
+! Wildcard mask is inverse of subnet mask
+! 0.0.0.255 matches any IP in /24 network</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">OSPF Cost Adjustment</div>
+                <div class="code-content">
+                    <pre>Router(config)# interface g0/0
+Router(config-if)# ip ospf cost 10
+
+! Lower cost = preferred path
+! Default cost = 100Mbps / interface bandwidth
+! GigabitEthernet = cost 1
+! FastEthernet = cost 10</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Verification Commands</div>
+                <div class="code-content">
+                    <pre>Router# show ip ospf neighbor
+Router# show ip ospf interface brief
+Router# show ip ospf database
+Router# show ip route ospf</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Test Failover</div>
+                <div class="code-content">
+                    <pre>Router(config)# interface g0/1
+Router(config-if)# shutdown
+
+! Watch OSPF detect failure (dead timer = 40s)
+! See routes recalculate automatically
+! Verify traffic uses alternate path</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Screenshots</h2>
+        <div class="grid-2">
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>OSPF topology with redundant paths</p>
+                <span class="filename">ospf-topology.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>OSPF neighbor table (FULL state)</p>
+                <span class="filename">ospf-neighbors.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Link State Database output</p>
+                <span class="filename">ospf-lsdb.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Route reconvergence after failure</p>
+                <span class="filename">ospf-failover.png</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Key Learnings</h2>
+        <div class="grid-4">
+            <div class="learning-card">
+                <div class="learning-icon">👋</div>
+                <h3>Hello Protocol</h3>
+                <p>OSPF sends hello packets every 10 seconds. If 4 hellos are missed (40s), neighbor is declared dead.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">💰</div>
+                <h3>Cost Metric</h3>
+                <p>OSPF picks paths based on cumulative cost. Faster links have lower cost - Gigabit preferred over FastEthernet.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🗂️</div>
+                <h3>Link State Database</h3>
+                <p>Every router maintains a complete map of the network topology. All routers have identical LSDBs.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">⚡</div>
+                <h3>Fast Convergence</h3>
+                <p>When topology changes, OSPF recalculates in seconds. Much faster than waiting for manual fixes.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Results & Outcomes</h2>
+        <div class="content-card">
+            <p>✅ Successfully configured OSPF across 4 routers with full neighbor adjacencies</p>
+            <p>✅ Verified automatic route learning - no manual static routes needed</p>
+            <p>✅ Tested and confirmed automatic failover within 30 seconds of link failure</p>
+            <p>✅ Understood how enterprise networks achieve high availability through dynamic routing</p>
+            <p>✅ Gained practical experience with OSPF troubleshooting and verification commands</p>
+        </div>
+    </section>
+
+    <footer class="project-footer">
+        <a href="static-routing.html" class="nav-btn">
+            <span class="label">Previous Project</span>
+            <span class="title">← Static Routing</span>
+        </a>
+        <a href="vlan-stp.html" class="nav-btn next">
+            <span class="label">Next Project</span>
+            <span class="title">VLAN & STP →</span>
+        </a>
+    </footer>
+</body>
+</html>
