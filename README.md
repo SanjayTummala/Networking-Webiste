@@ -1,211 +1,282 @@
-# Sanjay Kumar - Network Engineer Portfolio
+# 🌐 Sanjay Kumar — Network Engineer Portfolio
 
-A professional, modern portfolio website showcasing network engineering skills, hands-on projects, and technical expertise. Built with React, TypeScript, and Vite for optimal performance and maintainability.
+![Status](https://img.shields.io/badge/status-active-success)
+![Built with](https://img.shields.io/badge/built%20with-React%20%7C%20TypeScript-blue)
+![Focus](https://img.shields.io/badge/focus-Network%20Engineering-informational)
+![Responsive](https://img.shields.io/badge/responsive-desktop%20%7C%20tablet%20%7C%20mobile-brightgreen)
 
-## 🚀 Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | UI Components & State Management |
-| **TypeScript** | Type Safety & Developer Experience |
-| **Vite** | Build Tool & Dev Server |
-| **Canvas API** | Network Particle Animation |
-| **CSS3** | Styling with CSS Variables |
-
-## ✨ Features
-
-- **Responsive Design** - Optimized for Desktop, Tablet, and Mobile
-- **Smooth Animations** - Scroll-triggered animations and hover effects
-- **Network Particle Background** - Canvas-based animated background in Hero section
-- **Interactive Navigation** - Pill-style navbar with active section detection
-- **Project Showcase** - Expandable project cards with detailed information
-- **Professional Design** - Dark theme with blue accents, suitable for tech industry
-
-## 📁 Project Structure
-
-```
-sanjay-kumar-portfolio/
-│
-├── 📄 index.html                 # Standalone deployable version
-├── 📄 package.json               # Dependencies & scripts
-├── 📄 vite.config.ts             # Vite configuration
-├── 📄 tsconfig.json              # TypeScript configuration
-├── 📄 tsconfig.node.json         # TypeScript Node config
-├── 📄 .gitignore                 # Git ignore rules
-├── 📄 README.md                  # This file
-│
-├── 📁 src/                       # Source code
-│   ├── 📄 index.html             # Vite HTML template
-│   ├── 📄 main.tsx               # React entry point
-│   ├── 📄 App.tsx                # Main App component
-│   │
-│   ├── 📁 components/            # React components
-│   │   ├── 📄 Navbar.tsx         # Navigation bar
-│   │   ├── 📄 Hero.tsx           # Hero section with video
-│   │   ├── 📄 SectionDivider.tsx # Blue gradient divider
-│   │   ├── 📄 WhatIDo.tsx        # Services section
-│   │   ├── 📄 About.tsx          # About me section
-│   │   ├── 📄 Skills.tsx         # Skills grid
-│   │   ├── 📄 Projects.tsx       # Projects showcase
-│   │   ├── 📄 Labs.tsx           # Labs & practice
-│   │   ├── 📄 Contact.tsx        # Contact section
-│   │   └── 📄 Footer.tsx         # Footer component
-│   │
-│   └── 📁 styles/                # Stylesheets
-│       └── 📄 main.css           # Global styles
-│
-└── 📁 projects/                  # Project detail pages
-    ├── 📄 packet-analysis.html   # Wireshark packet analysis
-    ├── 📄 dhcp-implementation.html # DHCP configuration
-    ├── 📄 static-routing.html    # Static routing project
-    ├── 📄 ospf-routing.html      # OSPF dynamic routing
-    └── 📄 vlan-stp.html          # VLAN & STP project
-```
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
-- **Node.js** 18.0 or higher
-- **npm** 9.0 or higher (or yarn/pnpm)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/sanjaykumar/portfolio.git
-
-# Navigate to project directory
-cd portfolio
-
-# Install dependencies
-npm install
-```
-
-### Development
-
-```bash
-# Start development server with hot reload
-npm run dev
-
-# Server runs at http://localhost:3000
-```
-
-### Production Build
-
-```bash
-# Create optimized production build
-npm run build
-
-# Preview production build locally
-npm run preview
-```
-
-## 🌐 Deployment Options
-
-### Option 1: Static Hosting (Recommended)
-
-The root `index.html` is a standalone file that works without any build process:
-
-1. Upload all files to your hosting provider
-2. Point your domain to the root directory
-3. Done!
-
-**Supported Platforms:**
-- GitHub Pages
-- Netlify
-- Vercel
-- Cloudflare Pages
-- AWS S3 + CloudFront
-- Any static hosting
-
-### Option 2: Vite Build Deployment
-
-```bash
-# Build the project
-npm run build
-
-# Deploy the 'dist' folder to your hosting provider
-```
-
-### GitHub Pages Deployment
-
-```bash
-# Install gh-pages package
-npm install -D gh-pages
-
-# Add to package.json scripts:
-# "deploy": "gh-pages -d dist"
-
-# Build and deploy
-npm run build
-npm run deploy
-```
-
-## 📱 Responsive Breakpoints
-
-| Breakpoint | Device |
-|------------|--------|
-| > 1024px | Desktop |
-| 768px - 1024px | Tablet |
-| 480px - 768px | Mobile |
-| < 480px | Small Mobile |
-
-## 🎨 Color Palette
-
-| Color | Hex Code | Usage |
-|-------|----------|-------|
-| Primary Background | `#020617` | Main background |
-| Card Background | `#0f172a` | Cards & containers |
-| Border Color | `#1e293b` | Borders & dividers |
-| Accent Blue | `#3b82f6` | Links, buttons, highlights |
-| Accent Cyan | `#06b6d4` | Tags & badges |
-| Text Primary | `#ffffff` | Headings |
-| Text Secondary | `#94a3b8` | Body text |
-| Text Muted | `#64748b` | Subtle text |
-
-## 📄 Sections
-
-1. **Hero** - Video background with particle animation, name, and role
-2. **What I Do** - 4 service cards showcasing expertise
-3. **About** - Professional background and goals
-4. **Skills** - 5 skill category cards with tags
-5. **Projects** - 5 detailed project cards with expand/collapse
-6. **Labs** - Home lab environment and tools
-7. **Contact** - Email, LinkedIn, and Resume download
-
-## 🔧 Customization
-
-### Updating Personal Information
-
-1. **Contact Details**: Edit `src/components/Contact.tsx`
-2. **About Text**: Edit `src/components/About.tsx`
-3. **Skills**: Edit `src/components/Skills.tsx`
-4. **Projects**: Edit `src/components/Projects.tsx`
-
-### Changing Colors
-
-Edit CSS variables in `src/styles/main.css`:
-
-```css
-:root {
-    --bg-primary: #020617;
-    --bg-secondary: #0f172a;
-    --accent-blue: #3b82f6;
-    /* ... other variables */
-}
-```
-
-## 📝 License
-
-This project is licensed under the MIT License.
-
-## 👤 Author
-
-**Sanjay Kumar**
-- LinkedIn: [linkedin.com/in/sanjaykumar](https://linkedin.com/in/sanjaykumar)
-- Email: sanjaykumar@example.com
+A professional portfolio website showcasing my **network engineering skills, hands-on lab work, and real-world networking projects**.  
+Built with a focus on **clarity, technical depth, and recruiter readability**.
 
 ---
 
-⭐ If you found this helpful, please give it a star!
+## 🎯 Purpose
+
+This portfolio was built to:
+
+- Present my **core networking knowledge** clearly and honestly  
+- Demonstrate **hands-on labs and simulations**, not just theory  
+- Showcase **real networking projects** with detailed explanations  
+- Give recruiters a **quick and accurate understanding** of my skills  
+
+This is not a template or showcase-only project — the site was refined iteratively while learning, testing, breaking, and fixing real implementations.
+
+---
+
+## 👨‍💻 Professional Focus
+
+- Network Engineering fundamentals  
+- Routing & Switching concepts  
+- Protocol behavior and packet-level understanding  
+- Enterprise-style lab simulations  
+- Foundational security awareness (network-focused)
+
+Cybersecurity is an **area of growing interest**, built on top of a strong networking foundation — not a replacement for it.
+
+---
+
+## 🧠 Skills Highlighted
+
+### Core Networking
+- TCP/IP & OSI Model  
+- IP Addressing & Subnetting  
+- ARP, ICMP, Ping  
+- Structured Network Troubleshooting  
+
+### Routing & Switching
+- Static & Default Routing  
+- OSPF (Single & Multi-Area Concepts)  
+- VLAN Configuration  
+- Spanning Tree Protocol (STP)  
+
+### Network Security Fundamentals
+- Access Control Lists (ACLs)  
+- Firewall Concepts  
+- Traffic Monitoring  
+- Basic Threat Awareness  
+
+### Tools & Platforms
+- GNS3  
+- Cisco Packet Tracer  
+- Wireshark  
+- Cisco IOS  
+
+### Operating Systems
+- Linux Basics  
+- Networking Services (SSH, DHCP)  
+- Command-Line Operations  
+
+---
+
+## 🧪 Labs & Homelab Practice
+
+The Labs section focuses on **learning through observation and validation**, including:
+
+- DHCP implementation and DORA process analysis  
+- OSPF neighbor formation and routing behavior  
+- Static & default routing behavior testing  
+- VLAN segmentation and STP observation  
+- Enterprise-style branch network simulations  
+- Packet capture and troubleshooting using Wireshark  
+- Device roles, interfaces, and topology exploration  
+
+Each lab was designed to understand **how and why networks behave**, not just how to configure them.
+
+---
+
+## 🧩 Projects Included
+
+The portfolio includes **five detailed networking projects**, each presented with:
+
+- A concise project summary  
+- Tools and technologies used  
+- Key learning outcomes  
+- A full detailed project view  
+
+Projects include:
+- Packet Analysis & Network Troubleshooting  
+- DHCP Implementation & Address Management  
+- Static & Default Routing  
+- OSPF Dynamic Routing  
+- VLAN & Spanning Tree Techniques  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React + TypeScript  
+- **Build Tool:** Vite  
+- **Styling:** Custom CSS (no UI frameworks)  
+- **Design Philosophy:** Minimal, content-first, dark theme  
+
+The UI is intentionally simple to keep focus on **technical substance**, not visual noise.
+
+---
+
+## 📱 Responsiveness & UX
+
+- Fully responsive (Desktop / Tablet / Mobile)  
+- Smooth section navigation  
+- Clean layout for fast recruiter review  
+- Keyboard and accessibility-friendly interactions  
+
+---
+
+## 🚀 Live Website
+
+🔗 **Portfolio:**
+
+# 🌐 Sanjay Kumar — Network Engineer Portfolio
+
+![Status](https://img.shields.io/badge/status-active-success)
+![Built with](https://img.shields.io/badge/built%20with-React%20%7C%20TypeScript-blue)
+![Focus](https://img.shields.io/badge/focus-Network%20Engineering-informational)
+![Responsive](https://img.shields.io/badge/responsive-desktop%20%7C%20tablet%20%7C%20mobile-brightgreen)
+
+A professional portfolio website showcasing my **network engineering skills, hands-on lab work, and real-world networking projects**.  
+Built with a focus on **clarity, technical depth, and recruiter readability**.
+
+---
+
+## 🎯 Purpose
+
+This portfolio was built to:
+
+- Present my **core networking knowledge** clearly and honestly  
+- Demonstrate **hands-on labs and simulations**, not just theory  
+- Showcase **real networking projects** with detailed explanations  
+- Give recruiters a **quick and accurate understanding** of my skills  
+
+This is not a template or showcase-only project — the site was refined iteratively while learning, testing, breaking, and fixing real implementations.
+
+---
+
+## 👨‍💻 Professional Focus
+
+- Network Engineering fundamentals  
+- Routing & Switching concepts  
+- Protocol behavior and packet-level understanding  
+- Enterprise-style lab simulations  
+- Foundational security awareness (network-focused)
+
+Cybersecurity is an **area of growing interest**, built on top of a strong networking foundation — not a replacement for it.
+
+---
+
+## 🧠 Skills Highlighted
+
+### Core Networking
+- TCP/IP & OSI Model  
+- IP Addressing & Subnetting  
+- ARP, ICMP, Ping  
+- Structured Network Troubleshooting  
+
+### Routing & Switching
+- Static & Default Routing  
+- OSPF (Single & Multi-Area Concepts)  
+- VLAN Configuration  
+- Spanning Tree Protocol (STP)  
+
+### Network Security Fundamentals
+- Access Control Lists (ACLs)  
+- Firewall Concepts  
+- Traffic Monitoring  
+- Basic Threat Awareness  
+
+### Tools & Platforms
+- GNS3  
+- Cisco Packet Tracer  
+- Wireshark  
+- Cisco IOS  
+
+### Operating Systems
+- Linux Basics  
+- Networking Services (SSH, DHCP)  
+- Command-Line Operations  
+
+---
+
+## 🧪 Labs & Homelab Practice
+
+The Labs section focuses on **learning through observation and validation**, including:
+
+- DHCP implementation and DORA process analysis  
+- OSPF neighbor formation and routing behavior  
+- Static & default routing behavior testing  
+- VLAN segmentation and STP observation  
+- Enterprise-style branch network simulations  
+- Packet capture and troubleshooting using Wireshark  
+- Device roles, interfaces, and topology exploration  
+
+Each lab was designed to understand **how and why networks behave**, not just how to configure them.
+
+---
+
+## 🧩 Projects Included
+
+The portfolio includes **five detailed networking projects**, each presented with:
+
+- A concise project summary  
+- Tools and technologies used  
+- Key learning outcomes  
+- A full detailed project view  
+
+Projects include:
+- Packet Analysis & Network Troubleshooting  
+- DHCP Implementation & Address Management  
+- Static & Default Routing  
+- OSPF Dynamic Routing  
+- VLAN & Spanning Tree Techniques  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React + TypeScript  
+- **Build Tool:** Vite  
+- **Styling:** Custom CSS (no UI frameworks)  
+- **Design Philosophy:** Minimal, content-first, dark theme  
+
+The UI is intentionally simple to keep focus on **technical substance**, not visual noise.
+
+---
+
+## 📱 Responsiveness & UX
+
+- Fully responsive (Desktop / Tablet / Mobile)  
+- Smooth section navigation  
+- Clean layout for fast recruiter review  
+- Keyboard and accessibility-friendly interactions  
+
+---
+
+## 🚀 Live Website
+
+🔗 **Portfolio:** *(Add your deployed URL here)*  
+Example:
+
+---
+
+## 📬 Contact
+
+I am actively seeking opportunities in **Network Engineering** roles where I can:
+
+- Apply strong networking fundamentals  
+- Continue learning in real production environments  
+- Contribute to stable and secure network operations  
+
+**Connect with me:**
+- 📧 Email: sanjaykumartummala@gmail.com  
+- 💼 LinkedIn: https://linkedin.com/in/sanjaykumarcs/
+
+---
+
+## 📝 Final Note
+
+This portfolio reflects **consistent effort, problem-solving, and growth**.  
+It represents my current stage as a network engineer and my commitment to building a strong technical foundation.
+
+---
+
+© 2026 Sanjay Kumar
+
