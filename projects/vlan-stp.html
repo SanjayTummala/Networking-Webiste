@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLAN & Spanning Tree Techniques | Sanjay Kumar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-card: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-purple: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .project-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .nav-title { font-size: 14px; color: var(--text-muted); }
+
+        .project-hero {
+            padding: 140px 40px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-label {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+        }
+
+        .project-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .meta-item { display: flex; align-items: center; gap: 8px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .tag {
+            padding: 6px 14px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+        }
+
+        .section {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .content-card p:last-child { margin-bottom: 0; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .objective-list { list-style: none; }
+
+        .objective-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .objective-list li:last-child { border-bottom: none; }
+        .objective-list .check { color: var(--accent-green); font-size: 16px; flex-shrink: 0; }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); }
+        .tool-icon { font-size: 40px; margin-bottom: 12px; }
+        .tool-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .tool-card p { font-size: 13px; color: var(--text-muted); }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .step-card p { font-size: 14px; color: var(--text-secondary); }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .code-content { padding: 16px; overflow-x: auto; }
+
+        .code-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #a5b4fc;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .screenshot-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .screenshot-placeholder .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .screenshot-placeholder p { font-size: 14px; }
+        .screenshot-placeholder .filename { font-size: 12px; color: var(--text-muted); margin-top: 8px; font-family: monospace; }
+
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .learning-card:hover { border-color: var(--accent-blue); }
+        .learning-icon { font-size: 28px; margin-bottom: 12px; }
+        .learning-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+        .learning-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        /* Two Problems Layout */
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .problem-solution-pair {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .problem-card, .solution-card { padding: 24px; border-radius: 12px; }
+        .problem-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .solution-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .ps-icon { font-size: 24px; margin-bottom: 12px; }
+        .problem-card h3, .solution-card h3 { font-size: 16px; margin-bottom: 8px; }
+        .problem-card p, .solution-card p { font-size: 13px; color: var(--text-secondary); }
+
+        /* VLAN Table */
+        .vlan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        .vlan-table th,
+        .vlan-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .vlan-table th {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .vlan-table td {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .vlan-table tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .vlan-id {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* STP Port States */
+        .stp-states {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stp-state {
+            flex: 1;
+            min-width: 120px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stp-state-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: 4px;
+        }
+
+        .stp-state-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .nav-btn:hover { border-color: var(--accent-blue); }
+        .nav-btn .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .nav-btn .title { font-size: 15px; color: var(--accent-blue); font-weight: 500; }
+        .nav-btn.next { text-align: right; }
+
+        @media (max-width: 768px) {
+            .project-nav { padding: 12px 20px; }
+            .project-hero { padding: 120px 20px 60px; }
+            .section { padding: 40px 20px; }
+            .problems-grid { grid-template-columns: 1fr; }
+            .stp-states { flex-direction: column; }
+            .project-footer { flex-direction: column; gap: 16px; }
+            .nav-btn { width: 100%; }
+        }
+    </style>
+</head>
+
+<script>
+    function goBackToPortfolio(e) {
+        if (e) e.preventDefault();
+
+        // If opened inside modal / iframe
+        if (window.parent && window.parent !== window) {
+            if (typeof window.parent.closeProjectModal === "function") {
+                window.parent.closeProjectModal();
+                return;
+            }
+        }
+
+        // Fallback: normal navigation
+        window.location.href = "../index.html#projects";
+    }
+
+    // ESC key support
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            goBackToPortfolio(e);
+        }
+    });
+</script>
+
+<body>
+    <nav class="project-nav">
+       <a href="../index.html#projects"
+   class="back-btn"
+   onclick="goBackToPortfolio(event)">
+   ← Back to Portfolio
+</a>
+
+        <span class="nav-title">Project 05 of 05</span>
+    </nav>
+
+    <header class="project-hero">
+        <span class="project-label">PROJECT 05 • LAYER 2</span>
+        <h1>VLAN & Spanning Tree Techniques</h1>
+        <div class="project-meta">
+            <span class="meta-item">📅 Completed: May 2024</span>
+            <span class="meta-item">⏱️ Duration: 3 weeks</span>
+            <span class="meta-item">🏷️ Category: Layer 2 Switching</span>
+        </div>
+        <div class="project-tags">
+            <span class="tag">VLAN</span>
+            <span class="tag">STP</span>
+            <span class="tag">Trunking</span>
+            <span class="tag">802.1Q</span>
+            <span class="tag">Layer 2</span>
+        </div>
+    </header>
+
+    <section class="section">
+        <h2 class="section-title">Project Overview</h2>
+        <div class="content-card">
+            <p>This project focused on two critical Layer 2 technologies: VLANs for network segmentation and Spanning Tree Protocol (STP) for loop prevention. I created three VLANs on switches to separate HR, IT, and Guest traffic - even though all devices connect to the same physical switches, they're logically isolated and can't see each other.</p>
+            <p>I also connected switches in a redundant loop topology to test STP. Without STP, broadcast storms would kill the network within seconds. STP automatically detects the loop and blocks one port to break it, while keeping the path available as a backup if the primary link fails.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Problems Solved</h2>
+        <div class="problems-grid">
+            <div class="problem-solution-pair">
+                <div class="problem-card">
+                    <div class="ps-icon">⚠️</div>
+                    <h3>Problem 1: No Segmentation</h3>
+                    <p>All devices on the same network could see each other's broadcast traffic. HR data was visible to everyone - a major security concern.</p>
+                </div>
+                <div class="solution-card">
+                    <div class="ps-icon">✓</div>
+                    <h3>Solution: VLANs</h3>
+                    <p>Created separate broadcast domains. HR can't even see IT devices in their network neighborhood. Complete logical separation.</p>
+                </div>
+            </div>
+            <div class="problem-solution-pair">
+                <div class="problem-card">
+                    <div class="ps-icon">⚠️</div>
+                    <h3>Problem 2: Switching Loops</h3>
+                    <p>Connected switches for redundancy but broadcasts started looping infinitely. Network crashed within seconds due to broadcast storm.</p>
+                </div>
+                <div class="solution-card">
+                    <div class="ps-icon">✓</div>
+                    <h3>Solution: STP</h3>
+                    <p>STP elected a root bridge and blocked one port to break the loop. Redundancy exists but the loop is prevented.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">VLAN Configuration</h2>
+        <div class="content-card">
+            <p>I created three VLANs to segment the network by department. Each VLAN has its own IP subnet and dedicated switch ports:</p>
+            <table class="vlan-table">
+                <thead>
+                    <tr>
+                        <th>VLAN ID</th>
+                        <th>Name</th>
+                        <th>Network</th>
+                        <th>Assigned Ports</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="vlan-id">10</span></td>
+                        <td>HR</td>
+                        <td>192.168.10.0/24</td>
+                        <td>Fa0/1 - Fa0/5</td>
+                        <td>Human Resources department</td>
+                    </tr>
+                    <tr>
+                        <td><span class="vlan-id">20</span></td>
+                        <td>IT</td>
+                        <td>192.168.20.0/24</td>
+                        <td>Fa0/6 - Fa0/10</td>
+                        <td>IT department workstations</td>
+                    </tr>
+                    <tr>
+                        <td><span class="vlan-id">30</span></td>
+                        <td>GUEST</td>
+                        <td>192.168.30.0/24</td>
+                        <td>Fa0/11 - Fa0/15</td>
+                        <td>Guest WiFi / visitors</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">STP Port States</h2>
+        <div class="content-card">
+            <p>When STP is enabled, switch ports go through several states before forwarding traffic. This prevents temporary loops during topology changes:</p>
+            <div class="stp-states">
+                <div class="stp-state">
+                    <div class="stp-state-name">Blocking</div>
+                    <div class="stp-state-time">20 seconds</div>
+                </div>
+                <div class="stp-state">
+                    <div class="stp-state-name">Listening</div>
+                    <div class="stp-state-time">15 seconds</div>
+                </div>
+                <div class="stp-state">
+                    <div class="stp-state-name">Learning</div>
+                    <div class="stp-state-time">15 seconds</div>
+                </div>
+                <div class="stp-state">
+                    <div class="stp-state-name">Forwarding</div>
+                    <div class="stp-state-time">Active</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-size: 13px; color: var(--text-muted);">Total convergence time: ~30-50 seconds (can be reduced with Rapid STP)</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Objectives</h2>
+        <div class="content-card">
+            <ul class="objective-list">
+                <li><span class="check">✓</span> Create and configure multiple VLANs on switches</li>
+                <li><span class="check">✓</span> Assign switch ports to appropriate VLANs</li>
+                <li><span class="check">✓</span> Configure trunk ports between switches</li>
+                <li><span class="check">✓</span> Verify VLAN isolation between departments</li>
+                <li><span class="check">✓</span> Understand and observe STP root bridge election</li>
+                <li><span class="check">✓</span> Identify blocked ports and understand why STP blocks them</li>
+                <li><span class="check">✓</span> Test failover when primary path is disconnected</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Tools & Technologies</h2>
+        <div class="grid-4">
+            <div class="tool-card">
+                <div class="tool-icon">🔌</div>
+                <h3>Cisco Switches</h3>
+                <p>Layer 2 switching</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">🖥️</div>
+                <h3>GNS3</h3>
+                <p>Network simulation</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>Packet Tracer</h3>
+                <p>Topology design</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">🦈</div>
+                <h3>Wireshark</h3>
+                <p>STP BPDU analysis</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">What I Did</h2>
+        <div class="grid-2">
+            <div class="step-card">
+                <span class="step-number">1</span>
+                <h3>Created VLANs</h3>
+                <p>Configured VLAN 10 (HR), VLAN 20 (IT), and VLAN 30 (Guest) on all switches in the topology.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">2</span>
+                <h3>Assigned Access Ports</h3>
+                <p>Configured access ports and assigned each to the appropriate VLAN based on department requirements.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">3</span>
+                <h3>Configured Trunk Ports</h3>
+                <p>Set up 802.1Q trunk links between switches to carry all VLAN traffic with proper tagging.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">4</span>
+                <h3>Verified VLAN Isolation</h3>
+                <p>Tested that devices in different VLANs cannot communicate directly - complete broadcast isolation.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">5</span>
+                <h3>Observed STP Election</h3>
+                <p>Used "show spanning-tree" to identify root bridge and see which ports were in forwarding vs blocking state.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">6</span>
+                <h3>Tested STP Failover</h3>
+                <p>Disconnected primary link and watched STP unblock the backup port to restore connectivity.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Configuration Commands</h2>
+        <div class="grid-2">
+            <div class="code-block">
+                <div class="code-header">Create VLANs</div>
+                <div class="code-content">
+                    <pre>Switch(config)# vlan 10
+Switch(config-vlan)# name HR
+Switch(config-vlan)# exit
+
+Switch(config)# vlan 20
+Switch(config-vlan)# name IT
+Switch(config-vlan)# exit
+
+Switch(config)# vlan 30
+Switch(config-vlan)# name GUEST</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Assign Access Ports</div>
+                <div class="code-content">
+                    <pre>Switch(config)# interface range fa0/1-5
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 10
+Switch(config-if-range)# exit
+
+Switch(config)# interface range fa0/6-10
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 20</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Configure Trunk Port</div>
+                <div class="code-content">
+                    <pre>Switch(config)# interface g0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk allowed vlan 10,20,30
+Switch(config-if)# switchport trunk native vlan 99</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">STP Verification</div>
+                <div class="code-content">
+                    <pre>Switch# show spanning-tree
+Switch# show spanning-tree vlan 10
+Switch# show spanning-tree root
+Switch# show spanning-tree interface g0/1</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Project Screenshots</h2>
+        <div class="grid-2">
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>VLAN topology with trunks</p>
+                <span class="filename">vlan-topology.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>VLAN brief output</p>
+                <span class="filename">show-vlan-brief.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>STP root bridge info</p>
+                <span class="filename">stp-root.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Blocked port example</p>
+                <span class="filename">stp-blocked-port.png</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Key Learnings</h2>
+        <div class="grid-4">
+            <div class="learning-card">
+                <div class="learning-icon">🔀</div>
+                <h3>Access vs Trunk</h3>
+                <p>Access ports carry one VLAN untagged. Trunk ports carry multiple VLANs with 802.1Q tags.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">👑</div>
+                <h3>Root Bridge</h3>
+                <p>STP elects one switch as root based on lowest Bridge ID. All path costs calculated from root.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🚫</div>
+                <h3>Blocked Ports</h3>
+                <p>STP blocks redundant ports to prevent loops. These activate automatically if primary fails.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🔗</div>
+                <h3>Inter-VLAN Routing</h3>
+                <p>VLANs can't communicate without a Layer 3 device (router or L3 switch). Isolation is the point.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Results & Outcomes</h2>
+        <div class="content-card">
+            <p>✅ Successfully created and configured VLANs for complete traffic segmentation</p>
+            <p>✅ Verified broadcast isolation - devices in different VLANs cannot see each other</p>
+            <p>✅ Configured trunk ports to carry multiple VLANs between switches</p>
+            <p>✅ Understood STP root bridge election and port role assignments</p>
+            <p>✅ Tested and confirmed automatic failover when primary link was disconnected</p>
+            <p>✅ Gained practical Layer 2 skills essential for enterprise network management</p>
+        </div>
+    </section>
+
+    <footer class="project-footer">
+        <a href="ospf-routing.html" class="nav-btn">
+            <span class="label">Previous Project</span>
+            <span class="title">← OSPF Routing</span>
+        </a>
+        <a href="../index.html#projects" class="nav-btn next">
+            <span class="label">Back to Portfolio</span>
+            <span class="title">All Projects →</span>
+        </a>
+    </footer>
+</body>
+</html>

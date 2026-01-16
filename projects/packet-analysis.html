@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packet Analysis & Network Troubleshooting | Sanjay Kumar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-card: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .project-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .nav-title {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Hero */
+        .project-hero {
+            padding: 140px 40px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-label {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .project-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            padding: 6px 14px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+        }
+
+        /* Sections */
+        .section {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .content-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* Objective List */
+        .objective-list {
+            list-style: none;
+        }
+
+        .objective-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .objective-list li:last-child {
+            border-bottom: none;
+        }
+
+        .objective-list .check {
+            color: var(--accent-green);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+
+        .tool-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .tool-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tool-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Step Card */
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .code-content {
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #a5b4fc;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        /* Screenshot Placeholder */
+        .screenshot-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .screenshot-placeholder .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .screenshot-placeholder p {
+            font-size: 14px;
+        }
+
+        .screenshot-placeholder .filename {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-family: monospace;
+        }
+
+        /* Learning Card */
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .learning-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .learning-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .learning-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .learning-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Problem Solution */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .problem-card, .solution-card {
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .problem-card {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .solution-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .ps-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .problem-card h3, .solution-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .problem-card p, .solution-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .arrow {
+            font-size: 32px;
+            color: var(--accent-blue);
+        }
+
+        /* Navigation Footer */
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .nav-btn .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .nav-btn .title {
+            font-size: 15px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .nav-btn.next {
+            text-align: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .project-nav { padding: 12px 20px; }
+            .project-hero { padding: 120px 20px 60px; }
+            .section { padding: 40px 20px; }
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+            .arrow { transform: rotate(90deg); }
+            .project-footer { flex-direction: column; gap: 16px; }
+            .nav-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="project-nav">
+        <button onclick="goBackToPortfolio()" class="back-btn">
+            ← Back to Portfolio
+        </button>
+        <span class="nav-title">Project 01 of 05</span>
+    </nav>
+    
+    <script>
+        function goBackToPortfolio() {
+            // Check if we're in an iframe (modal)
+            if (window.parent !== window) {
+                // Call parent's closeProjectModal function
+                if (window.parent.closeProjectModal) {
+                    window.parent.closeProjectModal();
+                }
+            } else {
+                // Direct navigation (opened in new tab)
+                window.location.href = '../index.html#projects';
+            }
+        }
+    </script>
+
+    <!-- Hero -->
+    <header class="project-hero">
+        <span class="project-label">PROJECT 01 • NETWORK ANALYSIS</span>
+        <h1>Packet Analysis & Network Troubleshooting</h1>
+        <div class="project-meta">
+            <span class="meta-item">📅 Completed: January 2024</span>
+            <span class="meta-item">⏱️ Duration: 2 weeks</span>
+            <span class="meta-item">🏷️ Category: Network Analysis</span>
+        </div>
+        <div class="project-tags">
+            <span class="tag">ICMP</span>
+            <span class="tag">ARP</span>
+            <span class="tag">TCP/IP</span>
+            <span class="tag">Wireshark</span>
+            <span class="tag">GNS3</span>
+        </div>
+    </header>
+
+    <!-- Overview -->
+    <section class="section">
+        <h2 class="section-title">Project Overview</h2>
+        <div class="content-card">
+            <p>This project focused on capturing and analyzing network traffic to understand how packets flow through a network and how to diagnose common connectivity issues. Using Wireshark as the primary analysis tool, I captured over 200 packets across various protocols including ICMP, ARP, and TCP.</p>
+            <p>The goal was to move beyond theoretical knowledge and actually see what happens at the packet level when you ping a device, when ARP resolves MAC addresses, or when a connection fails. This hands-on approach gave me practical troubleshooting skills that I can apply to real-world network issues.</p>
+        </div>
+    </section>
+
+    <!-- Problem & Solution -->
+    <section class="section">
+        <h2 class="section-title">Problem Solved</h2>
+        <div class="problem-solution">
+            <div class="problem-card">
+                <div class="ps-icon">⚠️</div>
+                <h3>The Problem</h3>
+                <p>One device in my lab network couldn't ping the gateway. The error said "Request timed out" but all cables were connected and IP configuration looked correct.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="solution-card">
+                <div class="ps-icon">✓</div>
+                <h3>The Solution</h3>
+                <p>Wireshark showed ARP requests going out but no replies coming back. The gateway interface was in shutdown state. Once I enabled it, ARP replies came through and connectivity was restored.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objectives -->
+    <section class="section">
+        <h2 class="section-title">Project Objectives</h2>
+        <div class="content-card">
+            <ul class="objective-list">
+                <li><span class="check">✓</span> Capture and analyze ICMP packets to understand ping request/reply flow</li>
+                <li><span class="check">✓</span> Examine ARP packets to see how MAC address resolution works</li>
+                <li><span class="check">✓</span> Use Wireshark filters to isolate specific traffic types</li>
+                <li><span class="check">✓</span> Diagnose a connectivity failure using packet analysis</li>
+                <li><span class="check">✓</span> Document the packet flow across different OSI layers</li>
+                <li><span class="check">✓</span> Understand the structure of Ethernet frames and IP packets</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Tools Used -->
+    <section class="section">
+        <h2 class="section-title">Tools & Technologies</h2>
+        <div class="grid-4">
+            <div class="tool-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Wireshark_icon.svg" alt="Wireshark" style="width: 48px; height: 48px; margin-bottom: 12px;">
+                <h3>Wireshark</h3>
+                <p>Packet capture & analysis</p>
+            </div>
+            <div class="tool-card">
+                <img src="https://www.gns3.com/assets/images/logo-colour.png" alt="GNS3" style="width: 48px; height: 48px; margin-bottom: 12px; object-fit: contain;">
+                <h3>GNS3</h3>
+                <p>Network simulation</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon" style="font-size: 48px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="M6 8h.01M6 12h.01M6 16h.01M10 8h8M10 12h8M10 16h8"></path>
+                    </svg>
+                </div>
+                <h3>Command Line</h3>
+                <p>Ping, ARP, Traceroute</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon" style="font-size: 48px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <h3>Virtual PCs</h3>
+                <p>Traffic generation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What I Did -->
+    <section class="section">
+        <h2 class="section-title">What I Did</h2>
+        <div class="grid-2">
+            <div class="step-card">
+                <span class="step-number">1</span>
+                <h3>Set Up the Lab Environment</h3>
+                <p>Created a simple network topology in GNS3 with 2 PCs, 1 switch, and 1 router to simulate a basic LAN setup.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">2</span>
+                <h3>Started Packet Capture</h3>
+                <p>Opened Wireshark on the interface and began capturing all traffic without filters to see everything happening on the wire.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">3</span>
+                <h3>Generated Network Traffic</h3>
+                <p>Used ping commands, accessed different devices, and intentionally created scenarios to generate various types of traffic.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">4</span>
+                <h3>Applied Display Filters</h3>
+                <p>Used Wireshark filters like "icmp" and "arp" to isolate specific traffic types and focus on what I wanted to analyze.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">5</span>
+                <h3>Analyzed Packet Details</h3>
+                <p>Clicked on individual packets to examine source, destination, protocol information, and payload data at each OSI layer.</p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">6</span>
+                <h3>Diagnosed the Issue</h3>
+                <p>Identified that ARP requests weren't getting replies, which led me to discover the shutdown interface on the router.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commands -->
+    <section class="section">
+        <h2 class="section-title">Commands & Filters Used</h2>
+        <div class="grid-2">
+            <div class="code-block">
+                <div class="code-header">Wireshark Display Filters</div>
+                <div class="code-content">
+                    <pre>icmp                     # Show only ICMP packets
+arp                      # Show only ARP packets
+ip.addr == 192.168.1.1   # Filter by IP address
+tcp.port == 80           # Filter by TCP port
+eth.addr == aa:bb:cc     # Filter by MAC address
+ip.src == 192.168.1.10   # Filter by source IP</pre>
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">Network Commands</div>
+                <div class="code-content">
+                    <pre>ping 192.168.1.1         # Test connectivity
+arp -a                   # View ARP table
+tracert 192.168.1.1      # Trace packet path
+ipconfig /all            # Show IP configuration
+netstat -an              # Show active connections</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="section">
+        <h2 class="section-title">Project Screenshots</h2>
+        <div class="grid-2">
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Wireshark capture showing ICMP packets</p>
+                <span class="filename">wireshark-icmp-capture.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>ARP request and reply packets</p>
+                <span class="filename">arp-resolution.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>GNS3 network topology</p>
+                <span class="filename">lab-topology.png</span>
+            </div>
+            <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <p>Packet detail view showing layers</p>
+                <span class="filename">packet-details.png</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Learnings -->
+    <section class="section">
+        <h2 class="section-title">Key Learnings</h2>
+        <div class="grid-4">
+            <div class="learning-card">
+                <div class="learning-icon">📦</div>
+                <h3>Packet Structure</h3>
+                <p>Learned how packets are built layer by layer - Ethernet header, IP header, then payload.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🔍</div>
+                <h3>Troubleshooting Method</h3>
+                <p>When something doesn't work, check the packets. They tell you exactly where things break.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">🔄</div>
+                <h3>ARP Process</h3>
+                <p>Before any IP communication, devices need MAC addresses. ARP happens first.</p>
+            </div>
+            <div class="learning-card">
+                <div class="learning-icon">⏱️</div>
+                <h3>Timing Analysis</h3>
+                <p>Wireshark timestamps reveal latency. High delays between request and reply indicate issues.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="section">
+        <h2 class="section-title">Results & Outcomes</h2>
+        <div class="content-card">
+            <p>✅ Successfully captured and analyzed over 200 network packets across multiple protocols</p>
+            <p>✅ Diagnosed and resolved a connectivity issue that would have been difficult to find without packet analysis</p>
+            <p>✅ Gained practical experience with Wireshark that I can apply to future troubleshooting scenarios</p>
+            <p>✅ Developed a systematic approach to network troubleshooting using packet-level analysis</p>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <footer class="project-footer">
+        <a href="../index.html#projects" class="nav-btn">
+            <span class="label">Back to</span>
+            <span class="title">← All Projects</span>
+        </a>
+        <a href="dhcp-implementation.html" class="nav-btn next">
+            <span class="label">Next Project</span>
+            <span class="title">DHCP Implementation →</span>
+        </a>
+    </footer>
+</body>
+</html>
